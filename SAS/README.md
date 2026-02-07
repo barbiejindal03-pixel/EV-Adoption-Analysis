@@ -11,5 +11,9 @@ This folder contains the SAS Studio (web) program used to prepare analysis table
 ## Data source
 Electric Vehicle Population Data (Data.gov): https://catalog.data.gov/dataset/electric-vehicle-population-data
 
-• Full analysis outputs available in `ev_adoption_analysis_results.pdf`
+## Analysis Results (PDF)
+
+The full output generated from the SAS analysis, including summary tables and adoption trends, is available below:
+
+**[EV Adoption Analysis – SAS Results (PDF)](./ev_adoption_analysis_results.pdf)**
 
