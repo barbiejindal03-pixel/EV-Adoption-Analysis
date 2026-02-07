@@ -1,9 +1,13 @@
-## SAS Analysis
+# SAS Analysis
+This folder contains the SAS Studio (web) program used to prepare analysis tables from the Electric Vehicle Population Data.
 
-This folder contains SAS programs used to analyze electric vehicle adoption trends.
+## What this script produces
+- EV registrations by model year
+- BEV vs PHEV trend table
+- Top counties and cities by EV adoption
+- Manufacturer market share table
+- Electric range summary by adoption group
 
-### Key Tasks
-- Data import and cleaning
-- County and city-level aggregation
-- Adoption group segmentation
-- Summary statistics for EV range and CAFV eligibility
+## Data source
+Electric Vehicle Population Data (Data.gov): https://catalog.data.gov/dataset/electric-vehicle-population-data
+
