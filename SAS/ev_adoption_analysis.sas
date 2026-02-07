@@ -8,7 +8,7 @@ Description:
 - Identifies top cities and counties
 - Analyzes electric range by adoption group
 
- /* Generated Code (IMPORT) */
+/* Generated Code (IMPORT) */
 /* Source File: Electric_Vehicle_Population_Data.csv */
 /* Source Path: /home/u64356871 */
 %web_drop_table(WORK.IMPORT);
