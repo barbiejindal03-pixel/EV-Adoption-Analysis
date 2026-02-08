@@ -1,3 +1,6 @@
+- NOTE 
+# This script is designed to be run in a local environment where, the working directory is set to the project folder containing
+
 #setting working directory
 setwd("/Users/barbiejindal/Desktop/EV_Adoption_Project")
 list.files()
