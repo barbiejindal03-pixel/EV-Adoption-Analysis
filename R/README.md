@@ -36,3 +36,42 @@ This project follows a modular approach:
 - **R** focuses on visualization and insight communication
 
 This separation keeps the workflow clean, reproducible, and easy to extend.
+
+## Visualization Overview - Based on Generated Outputs 
+
+### EV Adoption Over Time  
+**File:** `ev_adoption_over_time.png`
+
+This line chart shows total registered electric vehicles by model year.  
+The visualization indicates very low adoption levels prior to 2010, followed by a steady increase through the 2010s. A sharp rise is visible after 2020, with a noticeable peak around the mid-2020s, followed by a decline in the most recent model year shown. This highlights significant year-to-year variation in recent adoption levels.
+
+### BEV vs PHEV Adoption Over Time  
+**File:** `bev_vs_phev.png`
+
+This chart compares Battery Electric Vehicles (BEVs) and Plug-in Hybrid Electric Vehicles (PHEVs) across model years.  
+BEV registrations are consistently higher than PHEV registrations throughout the time period shown. Both vehicle types increase over time, but BEVs exhibit a much steeper rise in later years, while PHEV adoption remains lower and grows more gradually.
+
+### Top 10 Counties by EV Adoption  
+**File:** `top_counties.png`
+
+This bar chart ranks counties by total EV registrations.  
+One county shows a substantially higher EV count than all others, while the remaining counties display smaller and more varied adoption levels. The chart highlights a strong concentration of EV registrations within a single county.
+
+### Top 10 Cities by EV Adoption  
+**File:** `top_cities.png`
+
+This visualization ranks cities by EV adoption, along with their associated counties.  
+One city stands out with a significantly higher EV count than the others, creating a clear separation between the leading city and the remaining group. The rest of the cities show moderate variation but cluster well below the top value.
+
+### Manufacturer Market Share  
+**File:** `manufacturer_share.png`
+
+This horizontal bar chart displays the market share of leading EV manufacturers.  
+One manufacturer clearly dominates the market with a substantially larger share than all others. The remaining manufacturers hold relatively small and closely grouped shares, indicating a highly uneven distribution among brands.
+
+### Average Electric Range by Adoption Group  
+**File:** `range_by_adoption_group.png`
+
+This bar chart compares average electric range across adoption groups.  
+All groups fall within a relatively narrow range of values. The MID adoption group shows the highest average electric range, followed closely by the LOW adoption group, while the HIGH adoption group has the lowest average range among the three.
+
