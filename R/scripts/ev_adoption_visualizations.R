@@ -1,5 +1,5 @@
 - NOTE 
-# This script is designed to be run in a local environment where, the working directory is set to the project folder containing
+# This script is designed to be run in a local environment where, the working directory is set to the project folder containing all the documents for this project. 
 
 #setting working directory
 setwd("/Users/barbiejindal/Desktop/EV_Adoption_Project")
