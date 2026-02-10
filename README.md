@@ -132,8 +132,7 @@ This repository is organized by tool and workflow stage to keep analysis and vis
 - **Root README**  
   Project overview, research questions, methodology, and key findings
 
-  _NOTE:_ Deatiled results are available in the [SAS Analysis](SAS/),[R Visualizations](R/) folders. 
-
-
+-- 
+**KEY NOTE:** Detailed results are available in the [SAS Analysis](SAS/),[R Visualizations](R/) folders.-- 
 
 
