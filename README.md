@@ -19,7 +19,7 @@ The purpose of this project is to:
 This project is designed to reflect a real-world analytics pipeline rather than a single-tool or exploratory analysis.
 
 ## Tools Used 
-This project has been completed using the following multi-tools; 
+This project has been completed using the following tools: 
 ### SAS
 SAS is used for data preparation, aggregation, and analytical table generation.
 The raw EV registration dataset is large and structured, making SAS well-suited for:
@@ -34,10 +34,8 @@ Once the data is cleaned and structured in SAS, R is leveraged to:
 - Compare adoption trends across time, geography, and vehicle types
 - Visually highlight concentration and distribution patterns
 - Generate reproducible figures directly from code
-
 ### Microsoft Word 
 Microsoft Word is used for documentation and structured reporting. It supports drafting and refining written interpretations of analytical outputs before they are finalized and published on GitHub.
-
 ### Microsoft Excel 
 Microsoft Excel is used for lightweight data inspection and validation during the analysis workflow. It is not the core analysis tool but has been used as a supporting tool, to ensure data accuracy and consistency throughout the pipeline.
 
@@ -84,8 +82,8 @@ This project is designed as a descriptive analytics study to explore electric ve
 - How does average electric range vary across high-, mid-, and low-adoption groups?
 - Are differences in electric range observable across these adoption categories?
 5. Evidence to Support Strategic and Planning Insights
-- What do observed adoption, geographic, manufacturer, and policy and infrastructure factors may be relevant patterns imply for future EV market expansion and infrastructure planning?
-
+- What do observed adoption, geographic, manufacturer, and infrastructure-related patterns suggest about future EV market expansion and infrastructure planning?
+  
 ## Key Findings
 The following findings summarize the main patterns observed from the SAS-generated analysis tables and R visualizations. The results are descriptive in nature and are intended to support interpretation rather than causal inference.
 
@@ -134,7 +132,7 @@ This repository is organized by tool and workflow stage to keep analysis and vis
 - **Root README**  
   Project overview, research questions, methodology, and key findings
 
-  _NOTE:_ Deatiled results are available in the [SAS Analysis](SAS/),[R Visualizations](R/) 
+  _NOTE:_ Deatiled results are available in the [SAS Analysis](SAS/),[R Visualizations](R/) folders. 
 
 
 
