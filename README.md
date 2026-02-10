@@ -27,7 +27,6 @@ The raw EV registration dataset is large and structured, making SAS well-suited 
 - Performing grouped aggregations and summaries
 - Producing clean, analysis-ready output tables
 - Ensuring repeatable and auditable data processing
-
 ### R
 R is used for visualization and insight communication.
 Once the data is cleaned and structured in SAS, R is leveraged to:
@@ -85,7 +84,7 @@ This project is designed as a descriptive analytics study to explore electric ve
 - How does average electric range vary across high-, mid-, and low-adoption groups?
 - Are differences in electric range observable across these adoption categories?
 5. Evidence to Support Strategic and Planning Insights
-- What do observed adoption, geographic, manufacturer, and policy-related patterns imply for future EV market expansion and infrastructure planning?
+- What do observed adoption, geographic, manufacturer, and policy and infrastructure factors may be relevant patterns imply for future EV market expansion and infrastructure planning?
 
 ## Key Findings
 The following findings summarize the main patterns observed from the SAS-generated analysis tables and R visualizations. The results are descriptive in nature and are intended to support interpretation rather than causal inference.
@@ -110,7 +109,7 @@ The following findings summarize the main patterns observed from the SAS-generat
 4. Vehicle Characteristics Across Adoption Groups
 - Average electric range values across high-, mid-, and low-adoption groups fall within a narrow band of 39–47 miles.
 - While differences in average range are observable across adoption groups, these differences are modest in magnitude.
-- within my understanding, Adoption is driven more by **infrastructure, incentives, and urban use cases**, not solely by battery capacity or vehicle technology
+- This suggests adoption is associated with factors beyond range, driven more by **infrastructure, incentives, and urban use cases**, not solely by battery capacity or vehicle technology
 
 5. Evidence to Support Strategic and Planning Insights
 - EV adoption is highly concentrated geographically, with **King County** emerging as the leading county and **Seattle** as the leading city in terms of registered electric vehicles.
