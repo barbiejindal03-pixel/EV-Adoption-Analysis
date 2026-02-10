@@ -5,7 +5,7 @@ to the project folder containing all the documents for this project.
 #setting working directory
 setwd("/Users/barbiejindal/Desktop/EV_Adoption_Project")
 list.files()
-getwd () 
+getwd() 
 dir.create("outputs", showWarnings = FALSE)
 
 #load libraries
