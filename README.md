@@ -1,4 +1,10 @@
 # EV-Adoption-Analysis
+**Author:** Barbie Jindal  
+**Project Type:** Descriptive Analytics | Multi-Tool Analysis  
+**Tools Used:** SAS, R, Microsoft Excel, Microsoft Word  
+**Data Source:** Electric Vehicle Population Data – Data.gov  
+**Geographic Scope:** United States (State and City-level registrations)  
+**Time Coverage:** Model Years 1999–2026 (Most Recent Available Records)   
 
 A multi-tool analytics project focused on understanding electric vehicle (EV) adoption trends using **SAS** for data preparation and analysis, and **R** for visualization and insight communication.
 
