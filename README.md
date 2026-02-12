@@ -1,5 +1,4 @@
 # EV-Adoption-Analysis
-**Author:** Barbie Jindal  
 **Project Type:** Descriptive Analytics | Multi-Tool Analysis  
 **Tools Used:** SAS, R, Microsoft Excel, Microsoft Word  
 **Data Source:** Electric Vehicle Population Data – Data.gov  
