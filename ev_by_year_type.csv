@@ -1,0 +1,40 @@
+model_year,ev_type,ev_count
+1999,Battery Electric Vehicle (BEV),2
+2000,Battery Electric Vehicle (BEV),8
+2002,Battery Electric Vehicle (BEV),1
+2003,Battery Electric Vehicle (BEV),1
+2008,Battery Electric Vehicle (BEV),20
+2010,Battery Electric Vehicle (BEV),21
+2010,Plug-in Hybrid Electric Vehicle (PHEV),2
+2011,Battery Electric Vehicle (BEV),533
+2011,Plug-in Hybrid Electric Vehicle (PHEV),57
+2012,Battery Electric Vehicle (BEV),611
+2012,Plug-in Hybrid Electric Vehicle (PHEV),789
+2013,Battery Electric Vehicle (BEV),2461
+2013,Plug-in Hybrid Electric Vehicle (PHEV),1503
+2014,Battery Electric Vehicle (BEV),1558
+2014,Plug-in Hybrid Electric Vehicle (PHEV),1661
+2015,Battery Electric Vehicle (BEV),3159
+2015,Plug-in Hybrid Electric Vehicle (PHEV),1241
+2016,Battery Electric Vehicle (BEV),3440
+2016,Plug-in Hybrid Electric Vehicle (PHEV),1634
+2017,Battery Electric Vehicle (BEV),4501
+2017,Plug-in Hybrid Electric Vehicle (PHEV),3900
+2018,Battery Electric Vehicle (BEV),9652
+2018,Plug-in Hybrid Electric Vehicle (PHEV),4244
+2019,Battery Electric Vehicle (BEV),8737
+2019,Plug-in Hybrid Electric Vehicle (PHEV),2038
+2020,Battery Electric Vehicle (BEV),10086
+2020,Plug-in Hybrid Electric Vehicle (PHEV),1811
+2021,Battery Electric Vehicle (BEV),16281
+2021,Plug-in Hybrid Electric Vehicle (PHEV),4355
+2022,Battery Electric Vehicle (BEV),24849
+2022,Plug-in Hybrid Electric Vehicle (PHEV),4880
+2023,Battery Electric Vehicle (BEV),51359
+2023,Plug-in Hybrid Electric Vehicle (PHEV),7520
+2024,Battery Electric Vehicle (BEV),38763
+2024,Plug-in Hybrid Electric Vehicle (PHEV),10577
+2025,Battery Electric Vehicle (BEV),28201
+2025,Plug-in Hybrid Electric Vehicle (PHEV),7804
+2026,Battery Electric Vehicle (BEV),12072
+2026,Plug-in Hybrid Electric Vehicle (PHEV),781
