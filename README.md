@@ -1,5 +1,6 @@
 # EV Adoption Analysis
-**Author:** Barbie Jindal | [LinkedIn](https://linkedin.com/in/barbiejindal) | [Portfolio](https://barbiejindal.com)
+**Author:** Barbie Jindal | [LinkedIn](https://linkedin.com/in/barbiejindal) | [https://barbiejindal03-pixel.github.io/EV-Adoption-Analysis/index.html]
+
 
 Multi-tool descriptive analysis of US electric vehicle adoption trends (1999–2026) using SAS, BigQuery, Python, and R — mapping state, county, and city-level registration patterns, manufacturer market share, and vehicle characteristics across high and low adoption regions.
 
