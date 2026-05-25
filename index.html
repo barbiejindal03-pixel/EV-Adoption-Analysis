@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EV Analytics · Washington State</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI',system-ui,sans-serif; background:#06060f; color:#e2e8f0; overflow-x:hidden; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position:fixed; left:0; top:0; width:230px; height:100vh;
+  background:linear-gradient(180deg,#0d0d1f 0%,#080812 100%);
+  border-right:1px solid rgba(139,92,246,0.15);
+  display:flex; flex-direction:column; z-index:100;
+  box-shadow:4px 0 24px rgba(0,0,0,0.4);
+}
+.sidebar-logo {
+  padding:28px 24px 20px;
+  border-bottom:1px solid rgba(139,92,246,0.12);
+}
+.logo-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(139,92,246,0.15); border:1px solid rgba(139,92,246,0.3);
+  border-radius:8px; padding:6px 12px; margin-bottom:12px;
+}
+.logo-dot { width:8px; height:8px; border-radius:50%; background:#8b5cf6; box-shadow:0 0 8px #8b5cf6; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+.logo-text { font-size:12px; font-weight:700; color:#8b5cf6; letter-spacing:1px; text-transform:uppercase; }
+.sidebar-title { font-size:20px; font-weight:800; color:#f1f5f9; letter-spacing:-0.5px; }
+.sidebar-sub { font-size:11px; color:#475569; margin-top:3px; }
+
+.nav-section { font-size:10px; color:#334155; text-transform:uppercase; letter-spacing:1.5px; padding:20px 24px 8px; font-weight:600; }
+.nav-item {
+  display:flex; align-items:center; gap:12px;
+  padding:11px 24px; cursor:pointer; color:#64748b;
+  font-size:13px; font-weight:500; transition:all 0.2s;
+  position:relative; border-left:3px solid transparent;
+}
+.nav-item:hover { background:rgba(139,92,246,0.08); color:#c4b5fd; }
+.nav-item.active {
+  background:rgba(139,92,246,0.12);
+  color:#a78bfa; border-left:3px solid #8b5cf6;
+}
+.nav-item.active .nav-icon { filter:drop-shadow(0 0 6px #8b5cf6); }
+.nav-icon { font-size:15px; width:18px; text-align:center; }
+
+.sidebar-footer {
+  margin-top:auto; padding:20px 24px;
+  border-top:1px solid rgba(139,92,246,0.1);
+}
+.sidebar-footer .name { font-size:13px; font-weight:600; color:#94a3b8; }
+.sidebar-footer .stack { font-size:11px; color:#334155; margin-top:3px; }
+
+/* ── MAIN ── */
+.main { margin-left:230px; min-height:100vh; }
+.page { display:none; padding:28px 28px 40px; }
+.page.active { display:block; }
+
+/* ── TOPBAR ── */
+.topbar {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:28px;
+}
+.page-title { font-size:24px; font-weight:800; color:#f1f5f9; letter-spacing:-0.5px; }
+.page-sub { font-size:13px; color:#475569; margin-top:3px; }
+.topbar-right { display:flex; align-items:center; gap:12px; }
+.status-badge {
+  display:flex; align-items:center; gap:6px;
+  background:rgba(6,182,212,0.1); border:1px solid rgba(6,182,212,0.25);
+  border-radius:20px; padding:6px 14px; font-size:12px; color:#22d3ee; font-weight:600;
+}
+.status-dot { width:6px; height:6px; border-radius:50%; background:#22d3ee; box-shadow:0 0 6px #22d3ee; }
+.date-badge {
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px; padding:6px 14px; font-size:12px; color:#64748b;
+}
+
+/* ── KPI CARDS ── */
+.kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:20px; }
+.kpi-card {
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px; padding:20px;
+  position:relative; overflow:hidden; transition:all 0.2s;
+}
+.kpi-card:hover { border-color:rgba(139,92,246,0.3); transform:translateY(-2px); box-shadow:0 8px 32px rgba(139,92,246,0.1); }
+.kpi-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(139,92,246,0.5),transparent);
+}
+.kpi-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+.kpi-icon-box {
+  width:38px; height:38px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center; font-size:18px;
+  background:rgba(139,92,246,0.12); border:1px solid rgba(139,92,246,0.2);
+}
+.kpi-trend { font-size:11px; font-weight:600; padding:3px 8px; border-radius:20px; }
+.kpi-trend.up { background:rgba(34,197,94,0.1); color:#4ade80; }
+.kpi-trend.neutral { background:rgba(6,182,212,0.1); color:#22d3ee; }
+.kpi-value { font-size:30px; font-weight:900; color:#f1f5f9; letter-spacing:-1px; line-height:1; }
+.kpi-label { font-size:12px; color:#475569; margin-top:6px; font-weight:500; }
+
+/* ── HIGHLIGHT STRIP ── */
+.highlight-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-bottom:20px; }
+.highlight-card {
+  background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(6,182,212,0.06));
+  border:1px solid rgba(139,92,246,0.2); border-radius:14px; padding:20px;
+  position:relative; overflow:hidden;
+}
+.highlight-card::after {
+  content:''; position:absolute; bottom:-20px; right:-20px;
+  width:80px; height:80px; border-radius:50%;
+  background:radial-gradient(circle,rgba(139,92,246,0.2),transparent);
+}
+.highlight-num { font-size:36px; font-weight:900; color:#a78bfa; letter-spacing:-1px; }
+.highlight-label { font-size:13px; color:#94a3b8; margin-top:4px; font-weight:600; }
+.highlight-sub { font-size:11px; color:#475569; margin-top:6px; }
+
+/* ── CHART GRID ── */
+.chart-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px; }
+.chart-grid-3 { display:grid; grid-template-columns:2fr 1fr; gap:16px; margin-bottom:16px; }
+.chart-grid-full { margin-bottom:16px; }
+
+.chart-card {
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px; padding:20px;
+  transition:border-color 0.2s;
+}
+.chart-card:hover { border-color:rgba(139,92,246,0.2); }
+.chart-card.full { grid-column:1/-1; }
+.chart-title { font-size:14px; font-weight:700; color:#e2e8f0; margin-bottom:3px; }
+.chart-sub { font-size:11px; color:#475569; margin-bottom:16px; }
+
+/* ── TABLE ── */
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th {
+  background:rgba(139,92,246,0.06); padding:10px 14px;
+  text-align:left; font-size:11px; color:#64748b;
+  text-transform:uppercase; letter-spacing:0.5px; font-weight:600;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+td { padding:11px 14px; border-bottom:1px solid rgba(255,255,255,0.04); color:#cbd5e1; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:rgba(139,92,246,0.04); }
+.rank { font-weight:800; color:#8b5cf6; }
+.bar-cell { display:flex; align-items:center; gap:8px; }
+.mini-bar { height:5px; border-radius:3px; background:linear-gradient(90deg,#8b5cf6,#06b6d4); }
+
+/* ── INSIGHT CARDS ── */
+.insight-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.insight-card { background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:16px; }
+.insight-label { font-size:10px; color:#475569; text-transform:uppercase; letter-spacing:1px; font-weight:600; margin-bottom:8px; }
+.insight-num { font-size:26px; font-weight:900; letter-spacing:-0.5px; margin-bottom:6px; }
+.insight-desc { font-size:12px; color:#64748b; }
+.insight-note { font-size:11px; color:#334155; margin-top:6px; }
+
+/* ── COMBINED PAGE SPECIFIC ── */
+.section-label {
+  font-size:11px; color:#475569; text-transform:uppercase; letter-spacing:1.5px;
+  font-weight:700; margin:24px 0 12px; display:flex; align-items:center; gap:10px;
+}
+.section-label::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.06); }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-badge"><div class="logo-dot"></div><span class="logo-text">Live · WA State</span></div>
+    <div class="sidebar-title">EV Analytics</div>
+    <div class="sidebar-sub">Washington State · 1999–2026</div>
+  </div>
+
+  <div class="nav-section">Navigation</div>
+  <div class="nav-item active" onclick="showPage('combined',this)">
+    <span class="nav-icon">⚡</span> Combined View
+  </div>
+  <div class="nav-item" onclick="showPage('outlook2026',this)">
+    <span class="nav-icon">🔮</span> 2026 EV Outlook
+  </div>
+  <div class="nav-item" onclick="showPage('overview',this)">
+    <span class="nav-icon">📊</span> Overview
+  </div>
+  <div class="nav-item" onclick="showPage('trends',this)">
+    <span class="nav-icon">📈</span> Adoption Trends
+  </div>
+  <div class="nav-item" onclick="showPage('geography',this)">
+    <span class="nav-icon">📍</span> Geography
+  </div>
+  <div class="nav-item" onclick="showPage('manufacturers',this)">
+    <span class="nav-icon">🚗</span> Manufacturers
+  </div>
+  <div class="nav-item" onclick="showPage('vehicle',this)">
+    <span class="nav-icon">🔋</span> Vehicle Analysis
+  </div>
+
+  <div class="sidebar-footer">
+    <div class="name">Barbie Jindal</div>
+    <div class="stack">BigQuery · Python · SQL</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: COMBINED VIEW -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page active" id="page-combined">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Washington State EV Adoption</div>
+      <div class="page-sub">Complete analysis · Electric Vehicle Population Dataset · BigQuery</div>
+    </div>
+    <div class="topbar-right">
+      <div class="status-badge"><div class="status-dot"></div>Data Updated</div>
+      <div class="date-badge">1999 – 2026</div>
+    </div>
+  </div>
+
+  <!-- KPI ROW -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-top">
+        <div class="kpi-icon-box">⚡</div>
+        <div class="kpi-trend up">↑ Cumulative</div>
+      </div>
+      <div class="kpi-value">270K</div>
+      <div class="kpi-label">Total Registered EVs</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top">
+        <div class="kpi-icon-box">🔋</div>
+        <div class="kpi-trend up">↑ vs 48% in 2012</div>
+      </div>
+      <div class="kpi-value">87%</div>
+      <div class="kpi-label">BEV Share (2023)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top">
+        <div class="kpi-icon-box">🏆</div>
+        <div class="kpi-trend neutral">40.77%</div>
+      </div>
+      <div class="kpi-value">Tesla</div>
+      <div class="kpi-label">#1 Manufacturer · 110,537 EVs</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top">
+        <div class="kpi-icon-box">📍</div>
+        <div class="kpi-trend up">↑ 49.5% of state</div>
+      </div>
+      <div class="kpi-value">King</div>
+      <div class="kpi-label">Top County · 133,815 EVs</div>
+    </div>
+  </div>
+
+  <!-- HIGHLIGHT STRIP -->
+  <div class="highlight-strip">
+    <div class="highlight-card">
+      <div class="highlight-num">58,879</div>
+      <div class="highlight-label">Peak Year Registrations</div>
+      <div class="highlight-sub">2023 — up from just 2 in 1999</div>
+    </div>
+    <div class="highlight-card">
+      <div class="highlight-num">Seattle</div>
+      <div class="highlight-label">Top City · 42,105 EVs</div>
+      <div class="highlight-sub">Nearly 3× second city (Bellevue)</div>
+    </div>
+    <div class="highlight-card">
+      <div class="highlight-num">39 mi</div>
+      <div class="highlight-label">Avg Range · High Adoption Counties</div>
+      <div class="highlight-sub">Infrastructure drives adoption, not range</div>
+    </div>
+  </div>
+
+  <!-- GROWTH + MANUFACTURER -->
+  <div class="section-label">Growth & Market Share</div>
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <div class="chart-title">EV Growth Over Time</div>
+      <div class="chart-sub">Annual registrations by model year · BEV vs PHEV</div>
+      <canvas id="c_growth" height="180"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Manufacturer Market Share</div>
+      <div class="chart-sub">Top 6 brands · % of 270K registered EVs</div>
+      <canvas id="c_make_donut" height="180"></canvas>
+    </div>
+  </div>
+
+  <!-- GEOGRAPHY -->
+  <div class="section-label">Geographic Distribution</div>
+  <div class="chart-grid-3">
+    <div class="chart-card">
+      <div class="chart-title">Top 10 Counties by EV Count</div>
+      <div class="chart-sub">King County leads at 49.5% of all EVs</div>
+      <canvas id="c_county" height="200"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">County Concentration</div>
+      <div class="chart-sub">Top 5 vs rest of state</div>
+      <canvas id="c_county_donut" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- MANUFACTURERS DETAIL + VEHICLE ANALYSIS -->
+  <div class="section-label">Manufacturer Detail · Vehicle Insights</div>
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <div class="chart-title">Top 10 Manufacturers</div>
+      <div class="chart-sub">Ranked by registration count · market share %</div>
+      <canvas id="c_make_bar" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Avg Electric Range by Adoption Group</div>
+      <div class="chart-sub">High-adoption areas have LOWER avg range — infrastructure effect</div>
+      <canvas id="c_range" height="220"></canvas>
+    </div>
+  </div>
+
+  <!-- TOP CITIES TABLE -->
+  <div class="section-label">Top Cities</div>
+  <div class="chart-card">
+    <div class="chart-title">Top 10 Cities by EV Registrations</div>
+    <div class="chart-sub">City-level adoption · Washington State</div>
+    <table>
+      <thead><tr><th>#</th><th>City</th><th>County</th><th>EV Count</th><th>Share of Total</th><th>Bar</th></tr></thead>
+      <tbody id="cityTableC"></tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: 2026 EV OUTLOOK -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-outlook2026">
+  <div class="topbar">
+    <div>
+      <div class="page-title">2026 EV Outlook — Are People Still Buying EVs?</div>
+      <div class="page-sub">US market reality vs global trend · Sources: IEA, Cox Automotive, CNBC · May 2026</div>
+    </div>
+    <div class="topbar-right">
+      <div class="status-badge"><div class="status-dot"></div>Current Data</div>
+    </div>
+  </div>
+
+  <!-- VERDICT BANNER -->
+  <div style="background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(6,182,212,0.08));border:1px solid rgba(139,92,246,0.25);border-radius:14px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px;">
+    <div style="font-size:36px">🌍</div>
+    <div>
+      <div style="font-size:16px;font-weight:800;color:#f1f5f9;">Global: EVs are booming. US: growth has stalled.</div>
+      <div style="font-size:13px;color:#64748b;margin-top:4px;">Global EV sales hit 20M+ in 2025 (↑20%). US EV market share dropped from 10.5% → 5.8% after federal tax credits expired. Hybrids are winning in America right now.</div>
+    </div>
+  </div>
+
+  <!-- KPI ROW -->
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">🌍</div><div class="kpi-trend up">↑ 20% YoY</div></div>
+      <div class="kpi-value">20M+</div>
+      <div class="kpi-label">Global EV Sales 2025</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">🇺🇸</div><div class="kpi-trend" style="background:rgba(239,68,68,0.1);color:#f87171;">↓ from 10.5%</div></div>
+      <div class="kpi-value">5.8%</div>
+      <div class="kpi-label">US EV Market Share Q4 2025</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">🔀</div><div class="kpi-trend up">↑ Rising fast</div></div>
+      <div class="kpi-value">~20%</div>
+      <div class="kpi-label">US Hybrid Market Share 2025</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">♻️</div><div class="kpi-trend up">↑ Booming</div></div>
+      <div class="kpi-value">Used EVs</div>
+      <div class="kpi-label">Used EV Market Growing Fast</div>
+    </div>
+  </div>
+
+  <!-- US vs GLOBAL CHART -->
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <div class="chart-title">US EV Market Share — The Cliff</div>
+      <div class="chart-sub">Quarterly US EV share % · tax credit expired end of 2024</div>
+      <canvas id="usEvShare" height="200"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Where Americans Are Going Instead</div>
+      <div class="chart-sub">2025 US new car market split by powertrain</div>
+      <canvas id="usMarketSplit" height="200"></canvas>
+    </div>
+  </div>
+
+  <!-- WHY CARDS -->
+  <div class="section-label">Why US Buyers Are Hesitating</div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:16px;">
+    <div class="chart-card">
+      <div style="font-size:13px;font-weight:700;color:#f87171;margin-bottom:12px;">⬇️ Reasons EV Sales Dropped in US</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:rgba(239,68,68,0.06);border-radius:8px;border:1px solid rgba(239,68,68,0.1)">
+          <div style="font-size:18px">💸</div>
+          <div><div style="font-size:13px;font-weight:600;color:#fca5a5;">Tax Credits Expired</div><div style="font-size:12px;color:#64748b;margin-top:3px;">Federal $7,500 EV tax credit removed → immediate sharp sales drop in Q4 2025</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:rgba(239,68,68,0.06);border-radius:8px;border:1px solid rgba(239,68,68,0.1)">
+          <div style="font-size:18px">💰</div>
+          <div><div style="font-size:13px;font-weight:600;color:#fca5a5;">Premium Price Tags</div><div style="font-size:12px;color:#64748b;margin-top:3px;">Most EVs still carry higher upfront cost vs gas cars. Buyers waiting for affordable models</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:rgba(239,68,68,0.06);border-radius:8px;border:1px solid rgba(239,68,68,0.1)">
+          <div style="font-size:18px">😰</div>
+          <div><div style="font-size:13px;font-weight:600;color:#fca5a5;">Range Anxiety + Charging Gaps</div><div style="font-size:12px;color:#64748b;margin-top:3px;">Some buyers still hesitant — need longer range + faster reliable public charging</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:rgba(239,68,68,0.06);border-radius:8px;border:1px solid rgba(239,68,68,0.1)">
+          <div style="font-size:18px">📉</div>
+          <div><div style="font-size:13px;font-weight:600;color:#fca5a5;">EV Loyalty Dropped 24%</div><div style="font-size:12px;color:#64748b;margin-top:3px;">S&P Global: more EV households switching BACK to gas after credits ended</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div style="font-size:13px;font-weight:700;color:#4ade80;margin-bottom:12px;">⬆️ Reasons EVs Are Still Growing</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:rgba(34,197,94,0.06);border-radius:8px;border:1px solid rgba(34,197,94,0.1)">
+          <div style="font-size:18px">⛽</div>
+          <div><div style="font-size:13px;font-weight:600;color:#86efac;">Gas Prices Spiking</div><div style="font-size:12px;color:#64748b;margin-top:3px;">May 2026: CNBC reports 7% jump in gas-car-to-EV trade-ins as fuel costs rise</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:rgba(34,197,94,0.06);border-radius:8px;border:1px solid rgba(34,197,94,0.1)">
+          <div style="font-size:18px">🔌</div>
+          <div><div style="font-size:13px;font-weight:600;color:#86efac;">Charging Infrastructure Expanding</div><div style="font-size:12px;color:#64748b;margin-top:3px;">NACS standard becoming universal — range anxiety decreasing as network grows</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:rgba(34,197,94,0.06);border-radius:8px;border:1px solid rgba(34,197,94,0.1)">
+          <div style="font-size:18px">🤑</div>
+          <div><div style="font-size:13px;font-weight:600;color:#86efac;">Lower Running Costs</div><div style="font-size:12px;color:#64748b;margin-top:3px;">EV drivers save ~$2,000/yr in fuel. 94% of owners cite fuel savings as motivation</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px;background:rgba(34,197,94,0.06);border-radius:8px;border:1px solid rgba(34,197,94,0.1)">
+          <div style="font-size:18px">♻️</div>
+          <div><div style="font-size:13px;font-weight:600;color:#86efac;">Used EV Market Booming</div><div style="font-size:12px;color:#64748b;margin-top:3px;">Lease returns flooding used market → accessible price points driving new buyers</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WA STATE CONNECTION -->
+  <div class="section-label">What This Means for Washington State (Your Dataset)</div>
+  <div class="chart-card">
+    <div class="chart-title">WA State Context in 2026 National Picture</div>
+    <div class="chart-sub">Your dataset covers 1999–2026 WA EV registrations — here's how it fits the national story</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:12px;">
+      <div class="insight-card" style="border-color:rgba(139,92,246,0.2)">
+        <div class="insight-label">Your 2024–2026 data shows slowdown</div>
+        <div class="insight-num" style="color:#8b5cf6;font-size:20px">49K → 36K → 12K</div>
+        <div class="insight-desc">Registrations peaked 2023 (58,879) then fell — matches national trend post-incentive expiry</div>
+      </div>
+      <div class="insight-card" style="border-color:rgba(6,182,212,0.2)">
+        <div class="insight-label">WA has no state EV incentive gap</div>
+        <div class="insight-num" style="color:#22d3ee;font-size:20px">State Credits</div>
+        <div class="insight-desc">Washington kept its own EV sales tax exemption — buffers national credit loss better than most states</div>
+      </div>
+      <div class="insight-card" style="border-color:rgba(34,197,94,0.2)">
+        <div class="insight-label">Infrastructure = WA's advantage</div>
+        <div class="insight-num" style="color:#4ade80;font-size:20px">King County</div>
+        <div class="insight-desc">Your analysis proved: charging infra drives adoption. WA's urban density = natural EV growth engine</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: OVERVIEW -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-overview">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Overview</div>
+      <div class="page-sub">High-level summary · Washington State EV Population</div>
+    </div>
+    <div class="status-badge"><div class="status-dot"></div>270,113 Total EVs</div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">⚡</div><div class="kpi-trend up">↑ 1999–2026</div></div>
+      <div class="kpi-value">270K</div>
+      <div class="kpi-label">Total Registered EVs</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">🔋</div><div class="kpi-trend up">↑ vs 48% in 2012</div></div>
+      <div class="kpi-value">87%</div>
+      <div class="kpi-label">BEV Share (2023)</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">🏆</div><div class="kpi-trend neutral">6× next brand</div></div>
+      <div class="kpi-value">40.77%</div>
+      <div class="kpi-label">Tesla Market Share</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">📍</div><div class="kpi-trend up">↑ 4× next county</div></div>
+      <div class="kpi-value">133,815</div>
+      <div class="kpi-label">King County EVs</div>
+    </div>
+  </div>
+
+  <div class="highlight-strip">
+    <div class="highlight-card">
+      <div class="highlight-num">58,879</div>
+      <div class="highlight-label">Peak Year (2023)</div>
+      <div class="highlight-sub">Up from just 2 in 1999</div>
+    </div>
+    <div class="highlight-card">
+      <div class="highlight-num">Seattle</div>
+      <div class="highlight-label">Top City · 42,105 EVs</div>
+      <div class="highlight-sub">3× Bellevue (#2)</div>
+    </div>
+    <div class="highlight-card">
+      <div class="highlight-num">39 mi</div>
+      <div class="highlight-label">Avg Range · High Adoption</div>
+      <div class="highlight-sub">Infrastructure > battery range</div>
+    </div>
+  </div>
+
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <div class="chart-title">EV Growth Over Time</div>
+      <div class="chart-sub">Total registrations by model year</div>
+      <canvas id="overviewGrowth" height="200"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Manufacturer Market Share</div>
+      <div class="chart-sub">Top 5 brands by % of total registrations</div>
+      <canvas id="overviewMake" height="200"></canvas>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: TRENDS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-trends">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Adoption Trends</div>
+      <div class="page-sub">BEV vs PHEV growth · 1999–2026</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">📅</div><div class="kpi-trend up">58,879 EVs</div></div>
+      <div class="kpi-value">2023</div>
+      <div class="kpi-label">Peak Registration Year</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">🔋</div><div class="kpi-trend up">75% of total</div></div>
+      <div class="kpi-value">202,784</div>
+      <div class="kpi-label">Total BEVs</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">🔌</div><div class="kpi-trend neutral">25% of total</div></div>
+      <div class="kpi-value">67,329</div>
+      <div class="kpi-label">Total PHEVs</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">📈</div><div class="kpi-trend up">Steepest rise</div></div>
+      <div class="kpi-value">2018</div>
+      <div class="kpi-label">Inflection Year</div>
+    </div>
+  </div>
+
+  <div class="chart-card chart-grid-full" style="margin-bottom:16px">
+    <div class="chart-title">BEV vs PHEV Adoption Over Time</div>
+    <div class="chart-sub">Annual registrations by vehicle type · all model years</div>
+    <canvas id="bevPhev" height="110"></canvas>
+  </div>
+
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <div class="chart-title">Total EV Growth Trend</div>
+      <div class="chart-sub">Combined BEV + PHEV by year</div>
+      <canvas id="totalGrowth" height="200"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">BEV Market Share by Year</div>
+      <div class="chart-sub">BEV as % of annual registrations</div>
+      <canvas id="bevShare" height="200"></canvas>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: GEOGRAPHY -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-geography">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Geographic Distribution</div>
+      <div class="page-sub">County and city-level EV adoption patterns</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">🏙️</div><div class="kpi-trend up">49.5% of WA</div></div>
+      <div class="kpi-value">King</div>
+      <div class="kpi-label">Top County · 133,815 EVs</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">🌆</div><div class="kpi-trend up">42,105 EVs</div></div>
+      <div class="kpi-value">Seattle</div>
+      <div class="kpi-label">Top City</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">📊</div><div class="kpi-trend up">King+Sno+Pierce</div></div>
+      <div class="kpi-value">Top 3</div>
+      <div class="kpi-label">Counties = 70% of all EVs</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">🗺️</div><div class="kpi-trend neutral">High concentration</div></div>
+      <div class="kpi-value">20</div>
+      <div class="kpi-label">Counties Analyzed</div>
+    </div>
+  </div>
+
+  <div class="chart-grid-3">
+    <div class="chart-card">
+      <div class="chart-title">Top 10 Counties by EV Registrations</div>
+      <div class="chart-sub">Total registered EVs per county</div>
+      <canvas id="countyChart" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">County Share</div>
+      <div class="chart-sub">Top 5 vs rest of state</div>
+      <canvas id="countyDonut" height="220"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">Top 10 Cities by EV Registrations</div>
+    <div class="chart-sub">City-level adoption · all counties included</div>
+    <table>
+      <thead><tr><th>#</th><th>City</th><th>County</th><th>EV Count</th><th>Share of Total</th></tr></thead>
+      <tbody id="cityTable"></tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: MANUFACTURERS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-manufacturers">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Manufacturer Analysis</div>
+      <div class="page-sub">Market share and brand concentration</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">🏆</div><div class="kpi-trend up">40.77%</div></div>
+      <div class="kpi-value">Tesla</div>
+      <div class="kpi-label">#1 Manufacturer</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">🚗</div><div class="kpi-trend up">Next 5 combined</div></div>
+      <div class="kpi-value">110,537</div>
+      <div class="kpi-label">Tesla Registrations</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">📊</div><div class="kpi-trend neutral">Concentrated</div></div>
+      <div class="kpi-value">20+</div>
+      <div class="kpi-label">Brands Tracked</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">⚡</div><div class="kpi-trend neutral">5.8× smaller</div></div>
+      <div class="kpi-value">7.02%</div>
+      <div class="kpi-label">Chevrolet (#2 brand)</div>
+    </div>
+  </div>
+
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <div class="chart-title">Market Share by Manufacturer</div>
+      <div class="chart-sub">% of total registered EVs in Washington</div>
+      <canvas id="makeBar" height="250"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Tesla vs Rest of Market</div>
+      <div class="chart-sub">Market concentration visualization</div>
+      <canvas id="makePie" height="250"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">Top 10 Manufacturers — Full Breakdown</div>
+    <div class="chart-sub">Ranked by registration count and market share</div>
+    <table>
+      <thead><tr><th>#</th><th>Manufacturer</th><th>Registrations</th><th>Market Share</th><th>Share Bar</th></tr></thead>
+      <tbody id="makeTable"></tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- PAGE: VEHICLE ANALYSIS -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="page" id="page-vehicle">
+  <div class="topbar">
+    <div>
+      <div class="page-title">Vehicle Characteristics</div>
+      <div class="page-sub">Range and type analysis by adoption group</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">🔋</div><div class="kpi-trend neutral">Counterintuitive</div></div>
+      <div class="kpi-value">39 mi</div>
+      <div class="kpi-label">Avg Range · High Adoption</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">🔌</div><div class="kpi-trend up">Rural effect</div></div>
+      <div class="kpi-value">45 mi</div>
+      <div class="kpi-label">Avg Range · Low Adoption</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">🏙️</div><div class="kpi-trend up">91% of dataset</div></div>
+      <div class="kpi-value">246,877</div>
+      <div class="kpi-label">High Adoption Vehicles</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-top"><div class="kpi-icon-box">💡</div><div class="kpi-trend neutral">Key finding</div></div>
+      <div class="kpi-value">Infra</div>
+      <div class="kpi-label">Drives adoption (not range)</div>
+    </div>
+  </div>
+
+  <div class="chart-grid-2">
+    <div class="chart-card">
+      <div class="chart-title">Average Electric Range by Adoption Group</div>
+      <div class="chart-sub">High vs Mid vs Low adoption counties</div>
+      <canvas id="rangeBar" height="220"></canvas>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Vehicle Count by Adoption Group</div>
+      <div class="chart-sub">Distribution of EVs across adoption tiers</div>
+      <canvas id="countDonut" height="220"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="chart-title">Key Insight: Why Range Doesn't Drive Adoption</div>
+    <div class="chart-sub">Analysis of range vs adoption patterns — counterintuitive finding</div>
+    <div class="insight-grid" style="margin-top:8px">
+      <div class="insight-card">
+        <div class="insight-label">High Adoption Counties</div>
+        <div class="insight-num" style="color:#8b5cf6">39.22 mi</div>
+        <div class="insight-desc">246,877 vehicles · King, Snohomish, Pierce lead</div>
+        <div class="insight-note">More PHEVs + older short-range EVs → lower avg</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-label">Mid Adoption Counties</div>
+        <div class="insight-num" style="color:#f59e0b">46.84 mi</div>
+        <div class="insight-desc">21,885 vehicles · Suburban spread</div>
+        <div class="insight-note">Newer long-range BEVs more common proportionally</div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-label">Low Adoption Counties</div>
+        <div class="insight-num" style="color:#22c55e">45.04 mi</div>
+        <div class="insight-desc">2,351 vehicles · Rural areas</div>
+        <div class="insight-note">Higher range needed for rural driving — self-selection</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const evByYear = [
+  {y:1999,n:2},{y:2000,n:8},{y:2002,n:1},{y:2003,n:1},{y:2008,n:20},
+  {y:2010,n:23},{y:2011,n:590},{y:2012,n:1400},{y:2013,n:3964},
+  {y:2014,n:3219},{y:2015,n:4400},{y:2016,n:5074},{y:2017,n:8401},
+  {y:2018,n:13896},{y:2019,n:10775},{y:2020,n:11897},{y:2021,n:20636},
+  {y:2022,n:29729},{y:2023,n:58879},{y:2024,n:49340},{y:2025,n:36005},{y:2026,n:12853}
+];
+const bev  = [2,8,1,1,20,21,533,611,2461,1558,3159,3440,4501,9652,8737,10086,16281,24849,51359,38763,28201,12072];
+const phev = [0,0,0,0,0,2,57,789,1503,1661,1241,1634,3900,4244,2038,1811,4355,4880,7520,10577,7804,781];
+const years  = evByYear.map(d=>d.y);
+const totals = evByYear.map(d=>d.n);
+
+const counties = [
+  {c:'King',n:133815},{c:'Snohomish',n:33766},{c:'Pierce',n:22238},
+  {c:'Clark',n:16694},{c:'Thurston',n:9911},{c:'Kitsap',n:9116},
+  {c:'Spokane',n:7652},{c:'Whatcom',n:6664},{c:'Benton',n:3827},{c:'Skagit',n:3194}
+];
+const cities = [
+  {city:'Seattle',county:'King',n:42105},{city:'Bellevue',county:'King',n:13120},
+  {city:'Vancouver',county:'Clark',n:10136},{city:'Redmond',county:'King',n:9242},
+  {city:'Kirkland',county:'King',n:7702},{city:'Sammamish',county:'King',n:7539},
+  {city:'Renton',county:'King',n:7448},{city:'Bothell',county:'Snohomish',n:7063},
+  {city:'Olympia',county:'Thurston',n:6364},{city:'Tacoma',county:'Pierce',n:5900}
+];
+const makes = [
+  {make:'TESLA',n:110537,pct:40.77},{make:'CHEVROLET',n:19044,pct:7.02},
+  {make:'NISSAN',n:15955,pct:5.88},{make:'FORD',n:14938,pct:5.51},
+  {make:'KIA',n:13617,pct:5.02},{make:'TOYOTA',n:11381,pct:4.20},
+  {make:'BMW',n:11202,pct:4.13},{make:'HYUNDAI',n:9828,pct:3.63},
+  {make:'RIVIAN',n:8511,pct:3.14},{make:'VOLKSWAGEN',n:7368,pct:2.72}
+];
+
+// ── PALETTE ───────────────────────────────────────────────────────────────────
+const P = ['#8b5cf6','#06b6d4','#22c55e','#f59e0b','#f97316','#ec4899','#3b82f6','#a78bfa','#34d399','#fbbf24'];
+const PURPLE = '#8b5cf6';
+const CYAN   = '#06b6d4';
+
+const darkGrid = {
+  color: 'rgba(255,255,255,0.05)',
+  borderColor: 'rgba(255,255,255,0.05)'
+};
+const darkTick = { color:'#475569', font:{size:11} };
+
+const baseOpts = {
+  responsive:true,
+  plugins:{ legend:{ labels:{ color:'#94a3b8', font:{size:11}, boxWidth:12 } } },
+  scales:{
+    x:{ grid:darkGrid, ticks:darkTick },
+    y:{ grid:darkGrid, ticks:darkTick }
+  }
+};
+
+// ── NAV ───────────────────────────────────────────────────────────────────────
+function showPage(name, el) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  el.classList.add('active');
+}
+
+// ── COMBINED PAGE CHARTS ───────────────────────────────────────────────────────
+new Chart(document.getElementById('c_growth'),{
+  type:'line',
+  data:{labels:years,datasets:[
+    {label:'BEV',data:bev,borderColor:PURPLE,backgroundColor:'rgba(139,92,246,0.12)',fill:true,tension:0.4,pointRadius:2},
+    {label:'PHEV',data:phev,borderColor:CYAN,backgroundColor:'rgba(6,182,212,0.08)',fill:true,tension:0.4,pointRadius:2}
+  ]},
+  options:{...baseOpts,scales:{x:{grid:darkGrid,ticks:darkTick},y:{grid:darkGrid,ticks:{...darkTick,callback:v=>v.toLocaleString()}}}}
+});
+
+new Chart(document.getElementById('c_make_donut'),{
+  type:'doughnut',
+  data:{
+    labels:['Tesla','Chevrolet','Nissan','Ford','Kia','Others'],
+    datasets:[{data:[40.77,7.02,5.88,5.51,5.02,35.80],backgroundColor:P,borderWidth:0,hoverOffset:6}]
+  },
+  options:{responsive:true,cutout:'65%',plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:11},boxWidth:12}}}}
+});
+
+new Chart(document.getElementById('c_county'),{
+  type:'bar',
+  data:{
+    labels:counties.map(c=>c.c),
+    datasets:[{label:'EVs',data:counties.map(c=>c.n),backgroundColor:counties.map((_,i)=>i===0?PURPLE:CYAN+'66'),borderRadius:4}]
+  },
+  options:{...baseOpts,indexAxis:'y',scales:{x:{grid:darkGrid,ticks:{...darkTick,callback:v=>(v/1000)+'k'}},y:{grid:darkGrid,ticks:darkTick}}}
+});
+
+new Chart(document.getElementById('c_county_donut'),{
+  type:'doughnut',
+  data:{
+    labels:[...counties.slice(0,5).map(c=>c.c),'Others'],
+    datasets:[{data:[...counties.slice(0,5).map(c=>c.n),counties.slice(5).reduce((a,c)=>a+c.n,0)],backgroundColor:P,borderWidth:0}]
+  },
+  options:{responsive:true,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:10},boxWidth:10}}}}
+});
+
+new Chart(document.getElementById('c_make_bar'),{
+  type:'bar',
+  data:{
+    labels:makes.map(m=>m.make),
+    datasets:[{label:'Market Share %',data:makes.map(m=>m.pct),backgroundColor:makes.map((_,i)=>i===0?PURPLE:CYAN+'88'),borderRadius:4}]
+  },
+  options:{...baseOpts,indexAxis:'y',scales:{x:{grid:darkGrid,ticks:{...darkTick,callback:v=>v+'%'}},y:{grid:darkGrid,ticks:darkTick}}}
+});
+
+new Chart(document.getElementById('c_range'),{
+  type:'bar',
+  data:{
+    labels:['High Adoption','Mid Adoption','Low Adoption'],
+    datasets:[{label:'Avg Range (mi)',data:[39.22,46.84,45.04],backgroundColor:[PURPLE,'#f59e0b','#22c55e'],borderRadius:6}]
+  },
+  options:{...baseOpts,scales:{x:{grid:darkGrid,ticks:darkTick},y:{grid:darkGrid,min:30,ticks:{...darkTick,callback:v=>v+' mi'}}}}
+});
+
+// City table - combined
+const cityTBodyC = document.getElementById('cityTableC');
+cities.forEach((c,i)=>{
+  const pct=(c.n/270113*100).toFixed(1);
+  const bar=Math.round(c.n/42105*100);
+  cityTBodyC.innerHTML+=`<tr><td class="rank">${i+1}</td><td><strong style="color:#e2e8f0">${c.city}</strong></td><td style="color:#64748b">${c.county}</td><td>${c.n.toLocaleString()}</td><td>${pct}%</td><td><div class="bar-cell"><div class="mini-bar" style="width:${bar}px"></div></div></td></tr>`;
+});
+
+// ── OVERVIEW PAGE ─────────────────────────────────────────────────────────────
+new Chart(document.getElementById('overviewGrowth'),{
+  type:'line',
+  data:{labels:years,datasets:[{label:'Total EVs',data:totals,borderColor:PURPLE,backgroundColor:'rgba(139,92,246,0.1)',fill:true,tension:0.4,pointRadius:3}]},
+  options:{...baseOpts,scales:{x:{grid:darkGrid,ticks:darkTick},y:{grid:darkGrid,ticks:{...darkTick,callback:v=>v.toLocaleString()}}}}
+});
+
+new Chart(document.getElementById('overviewMake'),{
+  type:'doughnut',
+  data:{labels:makes.slice(0,5).map(m=>m.make),datasets:[{data:makes.slice(0,5).map(m=>m.pct),backgroundColor:P,borderWidth:0}]},
+  options:{responsive:true,cutout:'65%',plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:11},boxWidth:12}}}}
+});
+
+// ── TRENDS PAGE ───────────────────────────────────────────────────────────────
+new Chart(document.getElementById('bevPhev'),{
+  type:'line',
+  data:{labels:years,datasets:[
+    {label:'BEV',data:bev,borderColor:PURPLE,backgroundColor:'rgba(139,92,246,0.1)',fill:true,tension:0.4,pointRadius:2},
+    {label:'PHEV',data:phev,borderColor:CYAN,backgroundColor:'rgba(6,182,212,0.08)',fill:true,tension:0.4,pointRadius:2}
+  ]},
+  options:{...baseOpts,scales:{x:{grid:darkGrid,ticks:darkTick},y:{grid:darkGrid,ticks:{...darkTick,callback:v=>v.toLocaleString()}}}}
+});
+
+new Chart(document.getElementById('totalGrowth'),{
+  type:'bar',
+  data:{labels:years,datasets:[{label:'Total EVs',data:totals,backgroundColor:PURPLE+'aa',borderRadius:4}]},
+  options:{...baseOpts,scales:{x:{grid:darkGrid,ticks:darkTick},y:{grid:darkGrid,ticks:{...darkTick,callback:v=>v.toLocaleString()}}}}
+});
+
+const bevSharePct=bev.map((b,i)=>totals[i]?Math.round(b/totals[i]*100):0);
+new Chart(document.getElementById('bevShare'),{
+  type:'line',
+  data:{labels:years,datasets:[{label:'BEV %',data:bevSharePct,borderColor:CYAN,backgroundColor:'rgba(6,182,212,0.1)',fill:true,tension:0.4,pointRadius:2}]},
+  options:{...baseOpts,scales:{x:{grid:darkGrid,ticks:darkTick},y:{grid:darkGrid,min:0,max:100,ticks:{...darkTick,callback:v=>v+'%'}}}}
+});
+
+// ── GEOGRAPHY PAGE ────────────────────────────────────────────────────────────
+new Chart(document.getElementById('countyChart'),{
+  type:'bar',
+  data:{labels:counties.map(c=>c.c),datasets:[{label:'EVs',data:counties.map(c=>c.n),backgroundColor:counties.map((_,i)=>i===0?PURPLE:CYAN+'66'),borderRadius:4}]},
+  options:{...baseOpts,indexAxis:'y',scales:{x:{grid:darkGrid,ticks:{...darkTick,callback:v=>(v/1000)+'k'}},y:{grid:darkGrid,ticks:darkTick}}}
+});
+
+new Chart(document.getElementById('countyDonut'),{
+  type:'doughnut',
+  data:{labels:[...counties.slice(0,5).map(c=>c.c),'Others'],datasets:[{data:[...counties.slice(0,5).map(c=>c.n),counties.slice(5).reduce((a,c)=>a+c.n,0)],backgroundColor:P,borderWidth:0}]},
+  options:{responsive:true,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:10},boxWidth:10}}}}
+});
+
+const cityTBody=document.getElementById('cityTable');
+cities.forEach((c,i)=>{
+  const pct=(c.n/270113*100).toFixed(1);
+  cityTBody.innerHTML+=`<tr><td class="rank">${i+1}</td><td>${c.city}</td><td style="color:#64748b">${c.county}</td><td>${c.n.toLocaleString()}</td><td>${pct}%</td></tr>`;
+});
+
+// ── MANUFACTURERS PAGE ────────────────────────────────────────────────────────
+new Chart(document.getElementById('makeBar'),{
+  type:'bar',
+  data:{labels:makes.map(m=>m.make),datasets:[{label:'Market Share %',data:makes.map(m=>m.pct),backgroundColor:makes.map((_,i)=>i===0?PURPLE:CYAN+'88'),borderRadius:4}]},
+  options:{...baseOpts,indexAxis:'y',scales:{x:{grid:darkGrid,ticks:{...darkTick,callback:v=>v+'%'}},y:{grid:darkGrid,ticks:darkTick}}}
+});
+
+new Chart(document.getElementById('makePie'),{
+  type:'doughnut',
+  data:{labels:['Tesla','Chevrolet','Nissan','Ford','Kia','Others'],datasets:[{data:[40.77,7.02,5.88,5.51,5.02,35.80],backgroundColor:P,borderWidth:0}]},
+  options:{responsive:true,cutout:'65%',plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:11},boxWidth:12}}}}
+});
+
+const makeTBody=document.getElementById('makeTable');
+makes.forEach((m,i)=>{
+  makeTBody.innerHTML+=`<tr>
+    <td class="rank">${i+1}</td>
+    <td><strong style="color:#e2e8f0">${m.make}</strong></td>
+    <td>${m.n.toLocaleString()}</td>
+    <td><span style="color:#a78bfa;font-weight:700">${m.pct}%</span></td>
+    <td><div class="bar-cell"><div class="mini-bar" style="width:${m.pct*4}px"></div><span style="color:#64748b;font-size:11px">${m.pct}%</span></div></td>
+  </tr>`;
+});
+
+// ── 2026 OUTLOOK CHARTS ───────────────────────────────────────────────────────
+new Chart(document.getElementById('usEvShare'),{
+  type:'line',
+  data:{
+    labels:['Q1 2024','Q2 2024','Q3 2024','Q4 2024','Q1 2025','Q2 2025','Q3 2025','Q4 2025'],
+    datasets:[
+      {label:'US EV Market Share %',data:[7.1,7.8,8.5,8.9,8.2,9.1,10.5,5.8],
+       borderColor:'#f87171',backgroundColor:'rgba(239,68,68,0.08)',fill:true,tension:0.4,pointRadius:4,pointBackgroundColor:'#f87171'},
+      {label:'Hybrid Share %',data:[8.5,9.2,10.1,11.2,13.5,15.8,17.2,19.8],
+       borderColor:'#fbbf24',backgroundColor:'rgba(251,191,36,0.06)',fill:true,tension:0.4,pointRadius:4,pointBackgroundColor:'#fbbf24'}
+    ]
+  },
+  options:{...baseOpts,
+    scales:{
+      x:{grid:darkGrid,ticks:darkTick},
+      y:{grid:darkGrid,ticks:{...darkTick,callback:v=>v+'%'},min:0,max:25}
+    },
+    plugins:{
+      legend:{labels:{color:'#94a3b8',font:{size:11},boxWidth:12}},
+      annotation:{annotations:{line:{type:'line',xMin:3.5,xMax:3.5,borderColor:'rgba(248,113,113,0.4)',borderWidth:1,borderDash:[4,4],label:{content:'Tax credits expired',display:true,color:'#f87171',font:{size:10}}}}}
+    }
+  }
+});
+
+new Chart(document.getElementById('usMarketSplit'),{
+  type:'doughnut',
+  data:{
+    labels:['Gas/ICE','Hybrid (HEV)','Plug-in Hybrid (PHEV)','Battery Electric (BEV)'],
+    datasets:[{data:[74.2,14.8,5.2,5.8],backgroundColor:['#475569','#fbbf24','#06b6d4','#8b5cf6'],borderWidth:0,hoverOffset:6}]
+  },
+  options:{responsive:true,cutout:'60%',
+    plugins:{legend:{position:'right',labels:{color:'#94a3b8',font:{size:11},boxWidth:12}}}
+  }
+});
+
+// ── VEHICLE PAGE ──────────────────────────────────────────────────────────────
+new Chart(document.getElementById('rangeBar'),{
+  type:'bar',
+  data:{labels:['High Adoption','Mid Adoption','Low Adoption'],datasets:[{label:'Avg Range (mi)',data:[39.22,46.84,45.04],backgroundColor:[PURPLE,'#f59e0b','#22c55e'],borderRadius:6}]},
+  options:{...baseOpts,scales:{x:{grid:darkGrid,ticks:darkTick},y:{grid:darkGrid,min:30,ticks:{...darkTick,callback:v=>v+' mi'}}}}
+});
+
+new Chart(document.getElementById('countDonut'),{
+  type:'doughnut',
+  data:{labels:['High Adoption (246,877)','Mid Adoption (21,885)','Low Adoption (2,351)'],datasets:[{data:[246877,21885,2351],backgroundColor:[PURPLE,'#f59e0b','#22c55e'],borderWidth:0}]},
+  options:{responsive:true,cutout:'60%',plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:11},boxWidth:12}}}}
+});
+</script>
+</body>
+</html>
