@@ -1,0 +1,13 @@
+{
+  "_captured_at": "2026-07-14T08:07:33Z",
+  "_captured_run_id": "r_1be7ed04e1ef4f32ae9bcb29100577d9",
+  "status": "ok",
+  "exit_code": 0,
+  "log_contains": [
+    "Table WORK.make_counts created.",
+    "Table WORK.make_share created.",
+    "PROC PRINT completed: 11 observations printed, 3 variables"
+  ],
+  "log_does_not_contain": ["ERROR:", "[JENNER-ERROR"],
+  "diagnostics": {"parse_warnings": [], "runtime_warnings": []}
+}

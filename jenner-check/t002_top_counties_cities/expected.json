@@ -1,0 +1,14 @@
+{
+  "_captured_at": "2026-07-14T08:07:33Z",
+  "_captured_run_id": "r_b1edbe1f51ed49dd90c607e136568ce8",
+  "status": "ok",
+  "exit_code": 0,
+  "log_contains": [
+    "Table WORK.top_counties created.",
+    "Table WORK.top_cities created.",
+    "PROC PRINT completed: 6 observations printed, 2 variables",
+    "PROC PRINT completed: 20 observations printed, 3 variables"
+  ],
+  "log_does_not_contain": ["ERROR:", "[JENNER-ERROR"],
+  "diagnostics": {"parse_warnings": [], "runtime_warnings": []}
+}

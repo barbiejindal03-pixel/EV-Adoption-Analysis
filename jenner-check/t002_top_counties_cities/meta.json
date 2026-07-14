@@ -1,0 +1,7 @@
+{
+  "bundle": "t002_top_counties_cities",
+  "source_file": "ev_adoption_analysis.sas",
+  "source_blob_sha": "610784fccb85edaac5f45096271daf2e96a84603",
+  "source_commit": "ffd1dafc8e7f954c1287a086b3c08ef2e6c12466",
+  "notes": "Q2 geographic ranking (top counties/cities). Verbatim PROC SQL OUTOBS + GROUP BY + ORDER BY DESC from the author's script; WORK.IMPORT seeded via autoexec with a 30-row WA EV sample using the same spaced column names so the name literals resolve identically."
+}

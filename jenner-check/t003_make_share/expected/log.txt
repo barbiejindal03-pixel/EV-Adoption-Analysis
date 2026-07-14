@@ -1,0 +1,24 @@
+NOTE: Jenner v1.5.30 (build v1.5.30+unknown.20260714T043649Z.x86_64-unknown-linux-gnu)
+
+NOTE: Option OBS changed to 100.
+NOTE: Option VALIDVARNAME changed to ANY.
+NOTE: DATA WORK.import
+
+NOTE: Processing inline DATALINES (30 lines)
+
+NOTE: Read 30 rows from DATALINES.
+NOTE: Wrote WORK.import (30 rows, 7 columns).
+NOTE: DATA elapsed:
+  wall  0.00 seconds
+  cpu   0.00 seconds
+NOTE: PROC SQL 
+
+NOTE: Table WORK.make_counts created.
+NOTE: PROC SQL statement used.
+NOTE: PROC SQL 
+
+NOTE: Table WORK.make_share created.
+NOTE: PROC SQL statement used.
+NOTE: PROC PRINT data=WORK.make_share
+
+NOTE: PROC PRINT completed: 11 observations printed, 3 variables
