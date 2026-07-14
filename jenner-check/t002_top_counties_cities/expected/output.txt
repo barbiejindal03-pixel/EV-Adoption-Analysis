@@ -1,0 +1,33 @@
+
+  Obs     county  ev_count
+-----  ---------  --------
+    1  King             13
+    2  Snohomish         5
+    3  Pierce            4
+    4  Clark             4
+    5  Thurston          3
+    6  Kittitas          1
+
+  Obs         city     county  ev_count
+-----  -----------  ---------  --------
+    1  Seattle      King              6
+    2  Vancouver    Clark             3
+    3  Tacoma       Pierce            2
+    4  Bellevue     King              2
+    5  Everett      Snohomish         2
+    6  Lakewood     Pierce            1
+    7  Lynnwood     Snohomish         1
+    8  Olympia      Thurston          1
+    9  Ellensburg   Kittitas          1
+   10  Camas        Clark             1
+   11  Puyallup     Pierce            1
+   12  Kirkland     King              1
+   13  Lacey        Thurston          1
+   14  Renton       King              1
+   15  Marysville   Snohomish         1
+   16  Bothell      Snohomish         1
+   17  Federal Way  King              1
+   18  Tumwater     Thurston          1
+   19  Sammamish    King              1
+   20  Redmond      King              1
+

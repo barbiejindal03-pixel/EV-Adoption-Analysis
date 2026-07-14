@@ -1,0 +1,7 @@
+{
+  "bundle": "t005_make_by_county",
+  "source_file": "ev_adoption_analysis.sas",
+  "source_blob_sha": "610784fccb85edaac5f45096271daf2e96a84603",
+  "source_commit": "ffd1dafc8e7f954c1287a086b3c08ef2e6c12466",
+  "notes": "Q3 Part 2: manufacturer share within a county. Verbatim PROC SQL from the author's script: make_by_county grouped counts, then a JOIN to a per-county total subquery for share_pct, filtered to county='King' via WHERE. WORK.IMPORT seeded via autoexec with a 30-row WA EV sample."
+}
