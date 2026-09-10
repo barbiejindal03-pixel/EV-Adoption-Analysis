@@ -1,14 +1,8 @@
--- ============================================================
 -- EV Adoption & Market Analysis — BigQuery SQL
--- Author: Barbie Jindal
 -- Project: ev-adoption-analysis-497223
 -- Table: ev_project.ev_population
--- ============================================================
 
-
--- -------------------------------------------------------
 -- Q1 PART 1: EV adoption trend over time (by model year)
--- -------------------------------------------------------
 SELECT
   `Model Year` AS model_year,
   COUNT(*) AS ev_count
@@ -16,10 +10,7 @@ FROM `ev-adoption-analysis-497223.ev_project.ev_population`
 GROUP BY `Model Year`
 ORDER BY `Model Year`;
 
-
--- -------------------------------------------------------
 -- Q1 PART 2: BEV vs PHEV adoption trends over time
--- -------------------------------------------------------
 SELECT
   `Model Year` AS model_year,
   `Electric Vehicle Type` AS ev_type,
@@ -28,10 +19,7 @@ FROM `ev-adoption-analysis-497223.ev_project.ev_population`
 GROUP BY `Model Year`, `Electric Vehicle Type`
 ORDER BY `Model Year`, `Electric Vehicle Type`;
 
-
--- -------------------------------------------------------
 -- Q2 PART 1: Top 20 counties by EV adoption
--- -------------------------------------------------------
 SELECT
   County AS county,
   COUNT(*) AS ev_count
@@ -40,10 +28,7 @@ GROUP BY County
 ORDER BY ev_count DESC
 LIMIT 20;
 
-
--- -------------------------------------------------------
 -- Q2 PART 2: Top 30 cities by EV adoption
--- -------------------------------------------------------
 SELECT
   City AS city,
   County AS county,
@@ -54,9 +39,7 @@ ORDER BY ev_count DESC
 LIMIT 30;
 
 
--- -------------------------------------------------------
--- Q3 PART 1: Manufacturer market share (top 20)
--- -------------------------------------------------------
+-- Q3 PART 1: Manufacturer market share (top 20) 
 WITH make_counts AS (
   SELECT Make AS make, COUNT(*) AS ev_count
   FROM `ev-adoption-analysis-497223.ev_project.ev_population`
@@ -74,10 +57,7 @@ FROM make_counts m, total t
 ORDER BY share_pct DESC
 LIMIT 20;
 
-
--- -------------------------------------------------------
 -- Q3 PART 2: Manufacturer market share by county
--- -------------------------------------------------------
 WITH make_by_county AS (
   SELECT County AS county, Make AS make, COUNT(*) AS ev_count
   FROM `ev-adoption-analysis-497223.ev_project.ev_population`
@@ -97,20 +77,14 @@ FROM make_by_county m
 JOIN county_totals c ON m.county = c.county
 ORDER BY m.county, share_pct DESC;
 
-
--- -------------------------------------------------------
 -- Q4 PART 1: Top 10 high-adoption counties
--- -------------------------------------------------------
 SELECT County AS county, COUNT(*) AS ev_count
 FROM `ev-adoption-analysis-497223.ev_project.ev_population`
 GROUP BY County
 ORDER BY ev_count DESC
 LIMIT 10;
 
-
--- -------------------------------------------------------
 -- Q4 PART 2: Average electric range by adoption group
--- -------------------------------------------------------
 WITH high_counties AS (
   SELECT County AS county
   FROM `ev-adoption-analysis-497223.ev_project.ev_population`
@@ -179,10 +153,7 @@ FROM labeled
 GROUP BY adoption_group, `Electric Vehicle Type`
 ORDER BY adoption_group, ev_count DESC;
 
-
--- -------------------------------------------------------
 -- Q4 PART 4: CAFV eligibility mix by adoption group
--- -------------------------------------------------------
 WITH high_counties AS (
   SELECT County AS county
   FROM `ev-adoption-analysis-497223.ev_project.ev_population`
